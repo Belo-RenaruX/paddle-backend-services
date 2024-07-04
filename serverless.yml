@@ -1,0 +1,102 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: belocode
+service: paddle-backend-services
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    JWT_SECRET: "supersecret"
+    S3_BUCKET_NAME: "your-bucket-name"
+    SES_SOURCE_EMAIL: "your-verified-email@example.com"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource: "arn:aws:ssm:${self:provider.region}:*:parameter/my-s3-bucket-name"
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::your-bucket-name/*"
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+
+functions:
+  app:
+    handler: src/lambda.handle
+    events:
+      - httpApi:
+          path: /
+          method: ANY
+      - httpApi:
+          path: "{proxy+}"
+          method: ANY
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+    host: localhost
+    port: 3000
+
+resources:
+  Resources:
+    HttpApi:
+      Type: "AWS::ApiGatewayV2::Api"
+      Properties:
+        Name: paddle-backend-services
+        ProtocolType: HTTP
+        CorsConfiguration:
+          AllowOrigins:
+            - "*"
+          AllowHeaders:
+            - "*"
+          AllowMethods:
+            - "*"
+
+    GatewayResponseDefault4XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    GatewayResponseDefault5XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    HttpApiStage:
+      Type: "AWS::ApiGatewayV2::Stage"
+      Properties:
+        ApiId:
+          Ref: HttpApi
+        StageName: $default
+        AutoDeploy: true
+
+    LambdaPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName:
+          Ref: AppLambdaFunction

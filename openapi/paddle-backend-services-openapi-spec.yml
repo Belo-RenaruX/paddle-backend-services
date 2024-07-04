@@ -1,0 +1,591 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Paddle Backend Services - OpenAPI Spec
+  description: |-
+    This is the documentation for all the backend endpoints for Paddle Reservation App and Back Office.
+    
+    All services are protected via JWT and need a Bearer token to work, for this you need a valid 
+    client user or employee user to access.
+    
+    Some useful links:
+    - [Paddle Backend Services repository](https://github.com/Belo-RenaruX/paddle-backend-services)
+    - [App Flow chart](https://www.figma.com/design/FYHtu2jMuP4kSjpGYRK5mY/Paddle-App?node-id=0-1)
+    - [Backend Infrastructure](https://lucid.app/lucidchart/0e9e452a-b083-49d9-9698-aba3b362a757/edit?viewport_loc=3535%2C-588%2C2466%2C1196%2C0_0&invitationId=inv_9c5ed6ce-197c-43f7-a7db-2de190f2e929)
+servers:
+  - url: http://localhost:5000/api
+tags:
+  - name: users
+    description: Endpoints for user management
+  - name: establishments
+    description: Endpoints for establishment management
+  - name: playing-fields
+    description: Endpoints for playing field management
+  - name: price-brackets
+    description: Endpoints for price bracket management
+  - name: reservations
+    description: Endpoints for reserve management
+  - name: payments
+    description: Endpoints for payment management
+  - name: items
+    description: Endpoints for item management
+  - name: employees
+    description: Endpoints for employees management
+  - name: employee-roles
+    description: Endpoints for employee roles management
+paths:
+  /v1/users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get all users with filters
+      operationId: getUsersV1
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - BearerAuth: []
+    post:
+      tags:
+        - users
+      summary: Register a new user
+      description: Register a new user
+      operationId: registerUserV1
+      requestBody:
+        $ref: '#/components/requestBodies/UserRegisterBody'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+  /v1/users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get User
+      description: Get User
+      operationId: getUserV1
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - BearerAuth: []
+    patch:
+      tags:
+        - users
+      summary: update an existing user
+      description: update an existing user
+      operationId: updateUserV1
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        $ref: '#/components/requestBodies/UserUpdateBody'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - BearerAuth: []
+    delete:
+      tags:
+        - users
+      summary: delete an existing user
+      description: delete an existing user
+      operationId: deleteUserV1
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Success"
+        statusCode:
+          type: string
+          example: "200"
+      required:
+        - message
+        - statusCode
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Bad Request"
+        statusCode:
+          type: string
+          example: "400"
+        details:
+          type: array
+          items:
+            type: string
+          example: ["Invalid input data", "Missing required field"]
+      required:
+        - message
+    UserModel:
+      type: object
+      description: User model
+      properties:
+        id:
+          $ref: '#/components/schemas/UserId'
+        firstName:
+          $ref: '#/components/schemas/UserFirstName'
+        lastName:
+          $ref: '#/components/schemas/UserLastName'
+        profileImage:
+          $ref: '#/components/schemas/UserProfileImage'
+        documentType:
+          $ref: '#/components/schemas/UserId'
+        documentNumber:
+          $ref: '#/components/schemas/UserId'
+        district:
+          $ref: '#/components/schemas/UserId'
+        email:
+         $ref: '#/components/schemas/UserId'
+        phone:
+          $ref: '#/components/schemas/UserId'
+        playerStats:
+          type: object
+          properties:
+            level:
+              $ref: '#/components/schemas/UserId'
+          required:
+            - level
+      required:
+        - id
+        - firstName
+        - lastName
+        - district
+        - email
+        - phone
+        - playerStats
+    UserRegisterModel:
+      type: object
+      description: User register model
+      properties:
+        firstName:
+          $ref: '#/components/schemas/UserFirstName'
+        lastName:
+          $ref: '#/components/schemas/UserLastName'
+        documentType:
+          $ref: '#/components/schemas/UserId'
+        documentNumber:
+          $ref: '#/components/schemas/UserId'
+        district:
+          $ref: '#/components/schemas/UserId'
+        email:
+         $ref: '#/components/schemas/UserId'
+        phone:
+          $ref: '#/components/schemas/UserId'
+        level:
+          $ref: '#/components/schemas/UserId'
+      required:
+        - firstName
+        - lastName
+        - district
+        - email
+        - phone
+        - level
+    UserUpdateModel:
+      type: object
+      description: User update model
+      minProperties: 1
+      properties:
+        firstName:
+          $ref: '#/components/schemas/UserFirstName'
+        lastName:
+          $ref: '#/components/schemas/UserLastName'
+        profileImage:
+          $ref: '#/components/schemas/UserProfileImage'
+        documentType:
+          $ref: '#/components/schemas/UserId'
+        documentNumber:
+          $ref: '#/components/schemas/UserId'
+        district:
+          $ref: '#/components/schemas/UserId'
+        email:
+         $ref: '#/components/schemas/UserId'
+        phone:
+          $ref: '#/components/schemas/UserId'
+        level:
+          $ref: '#/components/schemas/UserId'
+    UserId:
+      type: integer
+      format: int64
+      example: 10
+      description: User Id
+    UserFirstName:
+      type: string
+      example: Jhon
+      description: User first name
+    UserLastName:
+      type: string
+      example: Doe
+      description: User last name
+    UserProfileImage:
+      type: string
+      example: s3.url.com
+      description: User profile image
+    UserDocumentType:
+      type: string
+      example: DNI
+      description: User document type
+      enum:
+        - DNI
+        - CE
+        - Pasaporte
+      nullable: true
+    UserDocumentNumber:
+      type: string
+      example: 8888888
+      pattern: '^(?:\d{8}|[a-zA-Z0-9]{9,12}|[a-zA-Z0-9]{6,9})$'
+      description: user document number
+      nullable: true
+    UserDistrict:
+      type: string
+      example: Miraflores
+      description: User district
+      enum:
+        - Ancón
+        - Ate
+        - Barranco
+        - Breña
+        - Carabayllo
+        - Cercado de Lima
+        - Chaclacayo
+        - Chorrillos
+        - Cieneguilla
+        - Comas
+        - El agustino
+        - Independencia
+        - Jesús maría
+        - La molina
+        - La victoria
+        - Lince
+        - Los olivos
+        - Lurigancho
+        - Lurín
+        - Magdalena del mar
+        - Miraflores
+        - Pachacámac
+        - Pucusana
+        - Pueblo libre
+        - Puente piedra
+        - Punta hermosa
+        - Punta negra
+        - Rímac
+        - San bartolo
+        - San borja
+        - San isidro
+        - San Juan de Lurigancho
+        - San Juan de Miraflores
+        - San Luis
+        - San Martin de Porres
+        - San Miguel
+        - Santa Anita
+        - Santa María del Mar
+        - Santa Rosa
+        - Santiago de Surco
+        - Surquillo
+        - Villa el Salvador
+        - Villa Maria del Triunfo
+    UserEmail:
+      type: string
+      example: example@example.com
+      pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+      description: User email
+    UserPhone:
+      type: string
+      example: 999999999
+      pattern: '^(?:\+51)?[ -]?(?:9\d{8}|(?:0[1-9][ -]?)?\d{6,7})$'
+      description: User phone number
+    UserPassword:
+      type: string
+      example: testPassword
+      description: User password
+    UserLevel:
+      type: string
+      example: 'Avanzado'
+      description: User level
+  parameters:
+    UserId:
+      name: userId
+      description: User Id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+        example: 10
+        description: User Id
+  requestBodies:
+    UserRegisterBody:
+      description: Register user request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRegisterModel'
+    UserUpdateBody:
+      description: update user request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserUpdateModel'
+          
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Invalid Input
+              value:
+                message: "Bad Request"
+                statusCode: 400
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Authentication Required
+              value:
+                message: "Unauthorized"
+                statusCode: 401
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Access Denied
+              value:
+                message: "Forbidden"
+                statusCode: 403
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Resource Not Found
+              value:
+                message: "Not Found"
+                statusCode: 404
+    UnprocessableEntity:
+      description: Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Unprocessable Entity
+              value:
+                message: "Unprocessable Entity"
+                statusCode: 422
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Rate Limit Exceeded
+              value:
+                message: "Too Many Requests"
+                statusCode: 429
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Server Error
+              value:
+                message: "Internal Server Error"
+                statusCode: 500
+    BadGateway:
+      description: Bad Gateway
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Upstream Server Error
+              value:
+                message: "Bad Gateway"
+                statusCode: 502
+    ServiceUnavailable:
+      description: Service Unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Service Down
+              value:
+                message: "Service Unavailable"
+                statusCode: 503
+    GatewayTimeout:
+      description: Gateway Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            error:
+              summary: Gateway Timeout
+              value:
+                message: "Gateway Timeout"
+                statusCode: 504
+    User:
+      description: Users object
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Success'
+              - type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserModel'
+    Users:
+      description: List of users
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Success'
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserModel'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

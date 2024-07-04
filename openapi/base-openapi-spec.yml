@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Paddle Backend Services - OpenAPI Spec
+  description: |-
+    This is the documentation for all the backend endpoints for Paddle Reservation App and Back Office.
+
+    All services are protected via JWT and need a Bearer token to work, for this you need a valid 
+    client user or employee user to access.
+
+    Some useful links:
+    - [Paddle Backend Services repository](https://github.com/Belo-RenaruX/paddle-backend-services)
+    - [App Flow chart](https://www.figma.com/design/FYHtu2jMuP4kSjpGYRK5mY/Paddle-App?node-id=0-1)
+    - [Backend Infrastructure](https://lucid.app/lucidchart/0e9e452a-b083-49d9-9698-aba3b362a757/edit?viewport_loc=3535%2C-588%2C2466%2C1196%2C0_0&invitationId=inv_9c5ed6ce-197c-43f7-a7db-2de190f2e929)
+servers:
+  - url: http://localhost:3000/api
+    description: Local Server
+  - url: http://localhost:3000/api
+    description: Production Server
+tags:
+  - name: auth
+    description: Endpoints for authentication and recovery
+  - name: users
+    description: Endpoints for user management
+  - name: establishments
+    description: Endpoints for establishment management
+  - name: playing-fields
+    description: Endpoints for playing field management
+  - name: price-brackets
+    description: Endpoints for price bracket management
+  - name: reservations
+    description: Endpoints for reserve management
+  - name: payments
+    description: Endpoints for payment management
+  - name: items
+    description: Endpoints for item management
+  - name: employees
+    description: Endpoints for employees management
+  - name: employee-roles
+    description: Endpoints for employee roles management
